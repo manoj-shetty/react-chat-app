@@ -1,22 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from "styled-components";
 import Logout from './Logout';
 import ChatInput from './ChatInput';
-import Messages from './Messages';
 import { getAllMessageRoute, sendMessageRoute } from '../utils/APIRoutes';
 import axios from 'axios';
+import { v4 as uuidv4 } from "uuid";
 
-const ChatContainer = ({ currentChat, currentUser }) => {
-
+const ChatContainer = ({ currentChat, currentUser, socket }) => {
     const [messages, setMessages] = useState([]);
+    const [arrivalMessage, setArrivalMessage] = useState(null);
+
+    const scrollRef = useRef();
+
 
     useEffect(() => {
         const asyncFn = async () => {
-            const response = await axios.post(getAllMessageRoute, {
-                from: currentUser._id,
-                to: currentChat._id,
-            });
-            setMessages(response.data);
+            if (currentChat) {
+                const response = await axios.post(getAllMessageRoute, {
+                    from: currentUser._id,
+                    to: currentChat._id,
+                });
+                setMessages(response.data);
+            }
         }
         asyncFn();
     }, [currentChat])
@@ -26,17 +31,47 @@ const ChatContainer = ({ currentChat, currentUser }) => {
             from: currentUser._id,
             to: currentChat._id,
             message: msg,
-        })
+        });
+        socket.current.emit("send-msg", {
+            to: currentChat._id,
+            from: currentUser._id,
+            message: msg,
+        });
+
+        const msgs = [...messages];
+        msgs.push({ fromSelf: true, message: msg });
+        setMessages(msgs);
     };
+
+    useEffect(() => {
+        if (socket.current) {
+            socket.current.on("msg-receive", (msg) => {
+                setArrivalMessage({ fromSelf: false, message: msg });
+            });
+        }
+    }, []);
+
+    useEffect(() => {
+        arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);
+    }, [arrivalMessage]);
+
+    useEffect(() => {
+        scrollRef.current?.scrollIntoView({ behaviour: "smooth" });
+    }, [messages]);
+
+
     return (
         <Container>
             <div className="chat-header">
                 <div className="user-details">
                     <div className="avatar">
-                        <img src={`data:image/svg+xml;base64,${currentChat.avatarImage}`} alt="avatar" />
+                        <img
+                            src={`data:image/svg+xml;base64,${ currentChat && currentChat.avatarImage}`}
+                            alt=""
+                        />
                     </div>
                     <div className="username">
-                        <h3>{currentChat.username}</h3>
+                        <h3>{currentChat && currentChat.username}</h3>
                     </div>
                 </div>
                 <Logout />
@@ -45,7 +80,7 @@ const ChatContainer = ({ currentChat, currentUser }) => {
                 {
                     messages.map((message) => {
                         return (
-                            <div>
+                            <div ref={scrollRef} key={uuidv4}>
                                 <div className={`message ${message.fromSelf ? "sended" : "received"}`}>
                                     <div className="content">
                                         <p>{message.message}</p>

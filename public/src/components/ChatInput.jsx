@@ -4,16 +4,16 @@ import Picker from 'emoji-picker-react'
 import { IoMdSend } from "react-icons/io";
 import { BsEmojiSmileFill } from "react-icons/bs";
 
-const ChatInput = ({handleSendMsg}) => {
+const ChatInput = ({ handleSendMsg }) => {
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const [msg, setMsg] = useState("");
 
-    const handleEmojiPickerHideShow = () =>{
+    const handleEmojiPickerHideShow = () => {
         setShowEmojiPicker(!showEmojiPicker);
     }
 
     const handleEmojiClick = (event) => {
-        let message =  msg;
+        let message = msg;
         message += event.emoji;
         setMsg(message);
         // setShowEmojiPicker(false);
@@ -28,27 +28,27 @@ const ChatInput = ({handleSendMsg}) => {
     }
 
     return (
-    <Container>
-        <div className="button-container">
-            <div className="emoji">
-                <BsEmojiSmileFill onClick={handleEmojiPickerHideShow}/>
-                {
-                    showEmojiPicker && <Picker onEmojiClick={handleEmojiClick}/>
-                }
+        <Container>
+            <div className="button-container">
+                <div className="emoji">
+                    <BsEmojiSmileFill onClick={handleEmojiPickerHideShow} />
+                    {
+                        showEmojiPicker && <Picker onEmojiClick={handleEmojiClick} />
+                    }
+                </div>
             </div>
-        </div>
-        <form className='input-container' onSubmit={(e)=>sendChat(e)}>
-        <input
-          type="text"
-          placeholder="type your message here"
-          onChange={(e) => setMsg(e.target.value)}
-          value={msg}
-        />            <button type="submit">
-                <IoMdSend/>
-            </button>
-        </form>
-    </Container>
-  )
+            <form className='input-container' onSubmit={(e) => sendChat(e)}>
+                <input
+                    type="text"
+                    placeholder="type your message here"
+                    onChange={(e) => setMsg(e.target.value)}
+                    value={msg}
+                />            <button type="submit">
+                    <IoMdSend />
+                </button>
+            </form>
+        </Container>
+    )
 }
 
 const Container = styled.div`
@@ -57,7 +57,10 @@ grid-template-columns: 5% 95%;
 align-items: center;
 background-color: #080420;
 padding: 0 2rem;
-padding-bottom: 0.3rem;
+@media screen and (min-width: 720px) and (max-width: 1080px) {
+    padding: 0 1rem;
+    gap: 1rem;
+  }
 .button-container{
     display: flex;
     align-items: center;
@@ -129,6 +132,12 @@ padding-bottom: 0.3rem;
         align-items: center;
         background-color: #9a86f3;
         border: none;
+        @media screen and (min-width: 720px) and (max-width: 1080px) {
+        padding: 0.3rem 1rem;
+        svg {
+          font-size: 1rem;
+        }
+      }
         svg{
             font-size: 2rem;
             color: white;
