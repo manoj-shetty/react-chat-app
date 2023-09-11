@@ -4,11 +4,11 @@ import Logo from '../assets/logo.svg'
 
 const Contacts = ({ contacts, currentUser, changeChat }) => {
     const [currentUserName, setCurrentUserName] = useState(undefined);
-    const [currentUSerImage, setCurrentUSerImage] = useState(undefined);
+    const [currentUserImage, setCurrentUserImage] = useState(undefined);
     const [currentSelected, setCurrentSelected] = useState(undefined);
     useEffect(() => {
         if (currentUser) {
-            setCurrentUSerImage(currentUser.avatarImage);
+            setCurrentUserImage(currentUser.avatarImage);
             setCurrentUserName(currentUser.username);
         }
     }, [currentUser]);
@@ -19,7 +19,7 @@ const Contacts = ({ contacts, currentUser, changeChat }) => {
     return (
         <>
             {
-                currentUSerImage && currentUserName && (
+                currentUserImage && currentUserName && (
                     <Container>
                         <div className="brand">
                             <img src={Logo} alt="logo" />
@@ -48,7 +48,7 @@ const Contacts = ({ contacts, currentUser, changeChat }) => {
 
                         <div className="current-user">
                             <div className="avatar">
-                                <img src={`data:image/svg+xml;base64,${currentUSerImage}`} alt="avatar" />
+                                <img src={`data:image/svg+xml;base64,${currentUserImage}`} alt="avatar" />
                             </div>
                             <div className="username">
                                 <h2>{currentUserName}</h2>
