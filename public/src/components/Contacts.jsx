@@ -74,6 +74,8 @@ background-color: #080420;
 
     img{
         height: 2rem;
+        background-color: white;
+        border-radius: 50%;
     }
     h3{
         color: white;
