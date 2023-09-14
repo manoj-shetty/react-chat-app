@@ -8,6 +8,7 @@ Avatar is fetched using https://api.multiavatar.com/ realtime api. Each time whe
 <b>axios</b> is used for http requests.<br>
 <b>bcrypt</b> is used for password encryption.<br>
 <b>Lazy & Suspense</b> from react is used for optimizing the overall loading time.<br>
+User can login quickly using <b>Google</b> <b>Facebook</b> & <b>Github</b>.
 
 ## Screenshots
 ### Homepage
